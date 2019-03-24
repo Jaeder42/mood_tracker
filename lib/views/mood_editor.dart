@@ -51,7 +51,7 @@ class _MoodEditorState extends State<MoodEditor> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Colors.yellow[100],
+        backgroundColor: Colors.brown[100],
         appBar: AppBar(
           title: Text('Enter Mood!'),
         ),
@@ -62,8 +62,13 @@ class _MoodEditorState extends State<MoodEditor> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
                 Container(
-                    height: 150,
-                    child: label(moodFace(this.mood), size: 100.0, turn: 1)),
+                    height: 180,
+                    width: 180,
+                    child: Card(
+                        color: Colors.yellow[100],
+                        child: Center(
+                            child: label(moodFace(this.mood),
+                                size: 100.0, turn: 1)))),
                 label('Mood'),
                 slider(_setMood, this.mood),
                 Center(

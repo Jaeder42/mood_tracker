@@ -45,7 +45,7 @@ class _MyHomePageState extends State<MyHomePage> {
         children: List.generate(100, (index) {
           return Card(
             color: Colors.yellow[100],
-            child: label(moodFace(3), size: 100.0, turn: 1),
+            child: Center(child:label(moodFace(3), size: 100.0, turn: 1)),
           );
         }),
       ),
