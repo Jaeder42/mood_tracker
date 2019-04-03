@@ -24,14 +24,26 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  _navigate() {
-    Navigator.push(
+  List<String> moods = [];
+  _navigate() async {
+    await Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => MoodEditor()),
     );
+    fetchMoods();
   }
 
-  _fetchDays() async {}
+  @override
+  void initState() {
+    super.initState();
+    fetchMoods();
+  }
+
+  fetchMoods() async {
+    moods = (await fetch()).split(',');
+    moods.removeLast();
+    setState(() => {});
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -40,15 +52,15 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body: GridView.count(
-        crossAxisCount: 2,
-        children: List.generate(100, (index) {
-          return Card(
-            color: Colors.yellow[100],
-            child: Center(child:label(moodFace(3), size: 100.0, turn: 1)),
-          );
-        }),
-      ),
+      body: moods.length > 0
+          ? GridView.count(
+              crossAxisCount: 2,
+              children: moods.map<Widget>((mood) {
+                var val = mood.split(';');
+                return card(double.tryParse(val[0]), date: val[1]);
+              }).toList())
+          : Center(child: Text('No mood recorded, add one now!')),
+
       floatingActionButton: FloatingActionButton(
         onPressed: _navigate,
         tooltip: 'Add mood',

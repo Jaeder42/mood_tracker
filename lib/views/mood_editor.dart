@@ -1,8 +1,43 @@
-import 'package:flutter/material.dart';
+import 'dart:async';
+import 'dart:io';
 
-class MoodEditor extends StatefulWidget {
-  @override
-  _MoodEditorState createState() => _MoodEditorState();
+import 'package:date_format/date_format.dart';
+import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart';
+
+Future<File> get localFile async {
+  final directory = await getApplicationDocumentsDirectory();
+
+  final path = directory.path;
+  return File('$path/mood.txt');
+}
+
+fetch() async {
+  try {
+    return await (await localFile).readAsString();
+  } catch (_) {
+    return '';
+  }
+}
+
+String get dateNow {
+  return formatDate(DateTime.now(), [d, ' ', MM, ' ', HH, ':', nn]);
+}
+
+card(double mood, {String date}) {
+  return Card(
+      color: Colors.yellow[100],
+      child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            ClipOval(),
+            Center(child: label(moodFace(mood), size: 100.0, turn: 1)),
+            label(date != null ? date : dateNow, size: 12.0),
+          ]));
+}
+
+write(data) async {
+  return (await localFile).writeAsString(data);
 }
 
 var label = (text, {size = 20.0, turn = 0}) => Padding(
@@ -16,6 +51,7 @@ var label = (text, {size = 20.0, turn = 0}) => Padding(
             fontWeight: FontWeight.bold,
           ),
         )));
+
 moodFace(double mood) {
   switch (mood.round()) {
     case 0:
@@ -27,6 +63,11 @@ moodFace(double mood) {
     default:
       return '=D';
   }
+}
+
+class MoodEditor extends StatefulWidget {
+  @override
+  _MoodEditorState createState() => _MoodEditorState();
 }
 
 class _MoodEditorState extends State<MoodEditor> {
@@ -44,7 +85,8 @@ class _MoodEditorState extends State<MoodEditor> {
     setState(() => {});
   }
 
-  _goHome() {
+  _goHome() async {
+    write('$mood;$dateNow,' + (await fetch()));
     Navigator.pop(context);
   }
 
@@ -61,14 +103,7 @@ class _MoodEditorState extends State<MoodEditor> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
-                Container(
-                    height: 180,
-                    width: 180,
-                    child: Card(
-                        color: Colors.yellow[100],
-                        child: Center(
-                            child: label(moodFace(this.mood),
-                                size: 100.0, turn: 1)))),
+                Container(height: 180, width: 180, child: card(mood)),
                 label('Mood'),
                 slider(_setMood, this.mood),
                 Center(
