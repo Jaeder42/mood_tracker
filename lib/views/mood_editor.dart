@@ -47,6 +47,7 @@ var label = (text, {size = 20.0, turn = 0}) => Padding(
         child: Text(
           text,
           style: TextStyle(
+            color: Color(0xff666666),
             fontSize: size,
             fontWeight: FontWeight.bold,
           ),
@@ -105,7 +106,7 @@ class _MoodEditorState extends State<MoodEditor> {
               children: <Widget>[
                 Container(height: 180, width: 180, child: card(mood)),
                 label('Mood'),
-                slider(_setMood, this.mood),
+                slider(_setMood, mood),
                 Center(
                     child: GestureDetector(
                         onTap: _goHome,

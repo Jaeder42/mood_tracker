@@ -59,7 +59,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 var val = mood.split(';');
                 return card(double.tryParse(val[0]), date: val[1]);
               }).toList())
-          : Center(child: Text('No mood recorded, add one now!')),
+          : Center(child: Text('No mood recorded, yet!')),
 
       floatingActionButton: FloatingActionButton(
         onPressed: _navigate,
